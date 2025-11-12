@@ -1,3 +1,21 @@
+// server/server.js (add these logs / use PORT)
+console.log('STARTUP: server.js loaded, node version:', process.version);
+process.on('uncaughtException', (err) => {
+  console.error('UNCAUGHT_EXCEPTION', err && err.stack ? err.stack : err);
+  process.exit(1);
+});
+process.on('unhandledRejection', (err) => {
+  console.error('UNHANDLED_REJECTION', err && err.stack ? err.stack : err);
+  process.exit(1);
+});
+
+// ... your existing app setup code here (express, routes, db setup) ...
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`LISTENING: Server listening on port ${PORT}`);
+});
+
 // server.js (Express + pg)
 import express from "express";
 import cors from "cors";
