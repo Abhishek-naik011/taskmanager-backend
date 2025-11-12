@@ -12,9 +12,9 @@ process.on('unhandledRejection', (err) => {
 // ------------------- Imports -------------------
 import express from "express";
 import cors from "cors";
-import pg from "pg";
+import pkg from "pg";
 
-const { Pool } = pg;
+const { Pool } = pkg;
 
 // ------------------- Database Connection -------------------
 const pool = new Pool({
@@ -51,4 +51,17 @@ app.post("/tasks", async (req, res) => {
   try {
     const { rows } = await pool.query(
       "INSERT INTO tasks(text) VALUES($1) RETURNING id, text",
-      [te]()
+      [text]
+    );
+    res.status(201).json(rows[0]);
+  } catch (err) {
+    console.error("❌ Database error (POST /tasks):", err.message);
+    res.status(500).json({ error: "Database error" });
+  }
+});
+
+// ------------------- Start Server -------------------
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`LISTENING: Server running on port ${PORT}`);
+});
